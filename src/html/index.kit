@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Country Generator</title>
+        <!-- @include 'styles.kit' -->
+    </head>
+
+    <body>
+
+        <div class="wrapper">
+            <div class="app__container">
+                <h1 class="app__container-title">Country Generator App</h1>
+                <p class="app__container-text">Check out some information about countries located in the chosen continent!</p>
+
+                <div class="app__body">
+
+                    <label for="continent">Your continent:</label>
+                    <select id="continent" onchange="selectContinent()">
+                        <option value="none" disabled selected>- choose one -</option>
+                        <option value="AF">Africa</option>
+                        <option value="AN">Antarctica</option>
+                        <option value="AS">Asia</option>
+                        <option value="EU">Europe</option>
+                        <option value="NA">North America</option>
+                        <option value="OC">Oceania</option>
+                        <option value="SA">South America</option>
+                    </select>
+
+
+                    <label for="amount">Number of countries to display:</label>
+                    <small>(please note that the possible choice is a range between 2 and 10)</small>
+                    <input type="number" id="amount" oninput="selectValue()">
+
+                    <p class="error-text"></p>
+
+                    <div class="control-buttons">
+                        <button class="clear">Clear All</button>
+                        <button class="submit">Submit</button>
+                    </div>
+
+
+                    <div class="country__results">
+
+                        <h2 class="country__results-info">Your results:</h2>
+
+                        <div class="country__box">
+
+
+                            <!-- <div class="country__card">
+                                <img class="country__card-flag" src="https://flagcdn.com/pl.svg" loading="lazy" alt="flag of a Poland">
+
+                                <div class="country__card-info">
+                                    <h3 class="country__card-name">Polska</h3>
+                                    <p class="country__card-details"><i class="fa-solid fa-circle-info"></i></p>
+                                </div>
+                            </div>
+                            <div class="country__card">
+                                <img class="country__card-flag" src="https://flagcdn.com/pl.svg" loading="lazy" alt="flag of a Poland">
+
+                                <div class="country__card-info">
+                                    <h3 class="country__card-name">Polska</h3>
+                                    <p class="country__card-details"><i class="fa-solid fa-circle-info"></i></p>
+                                </div>
+                            </div> -->
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal-shadow">
+            <div class="modal">
+                <h3>The most important informations about <span class="name"></span>Poland:</h3>
+                <p><strong>capital:</strong> <span class="capital"></span> </p>
+                <p><strong>population:</strong> <span class="population"></span> </p>
+                <p><strong>currency:</strong> <span class="currency"></span> </p>
+                <p><strong>subregion:</strong> <span class="subregion"></span> </p>
+                <p><strong>languages:</strong> <span class="languages"></span> </p>
+                <button class="close">Close</button>
+            </div>
+        </div>
+
+    </body>
+
+</html>
