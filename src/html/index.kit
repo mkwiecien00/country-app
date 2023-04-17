@@ -19,15 +19,8 @@
                 <div class="app__body">
 
                     <label for="continent">Your continent:</label>
-                    <select id="continent" onchange="selectContinent()">
+                    <select id="continent">
                         <option value="none" disabled selected>- choose one -</option>
-                        <option value="AF">Africa</option>
-                        <option value="AN">Antarctica</option>
-                        <option value="AS">Asia</option>
-                        <option value="EU">Europe</option>
-                        <option value="NA">North America</option>
-                        <option value="OC">Oceania</option>
-                        <option value="SA">South America</option>
                     </select>
 
 
@@ -47,10 +40,10 @@
 
                         <h2 class="country__results-info">Your results:</h2>
 
-                        <div class="country__box">
+                        <div class="country__box" id="country__box">
 
 
-                            <!-- <div class="country__card">
+                            <div class="country__card">
                                 <img class="country__card-flag" src="https://flagcdn.com/pl.svg" loading="lazy" alt="flag of a Poland">
 
                                 <div class="country__card-info">
@@ -65,7 +58,7 @@
                                     <h3 class="country__card-name">Polska</h3>
                                     <p class="country__card-details"><i class="fa-solid fa-circle-info"></i></p>
                                 </div>
-                            </div> -->
+                            </div>
 
                         </div>
 
@@ -77,7 +70,7 @@
 
         <div class="modal-shadow">
             <div class="modal">
-                <h3>The most important informations about <span class="name"></span>Poland:</h3>
+                <h3>The most important informations about: <span class="name"></span></h3>
                 <p><strong>capital:</strong> <span class="capital"></span> </p>
                 <p><strong>population:</strong> <span class="population"></span> </p>
                 <p><strong>currency:</strong> <span class="currency"></span> </p>
