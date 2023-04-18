@@ -22,8 +22,9 @@ const languages = document.getElementsByClassName('languages')
 let ID = 0
 let validAmount
 let usersValue
-let countryList = []
 let countryCard
+let continentCode
+let countries
 
 const URL = 'https://countries.trevorblades.com/graphql'
 
@@ -32,7 +33,7 @@ const checkForm = () => {
 	if (validAmount) {
 		if (continentSelect.value !== 'none') {
 			clearInputs()
-			countrySelection()
+			createResults()
 		} else {
 			error.textContent = 'Please complete all fields correctly.'
 		}
@@ -88,6 +89,35 @@ function getContinentCountries(continentCode) {
 	})
 }
 
+function createResults() {
+	countryResults.style.display = 'block'
+	countryBox.innerHTML = ''
+	countries.forEach(country => {
+		countryCard = document.createElement('div')
+		countryCard.classList.add('country__card')
+		countryCard.setAttribute('id', ID)
+		countryCard.innerHTML = `
+        <img class="country__card-flag" src="https://flagcdn.com/${country.code.toLowerCase()}.svg" loading="lazy" alt="flag of a ${
+			country.name
+		}">
+        <div class="country__card-info">
+            <h3 class="country__card-name">${country.name}</h3>
+            <p class="country__card-details" onclick='showModal()'><i class="fa-solid fa-circle-info"></i></p>
+        </div>`
+		countryBox.append(countryCard)
+
+		ID++
+	})
+}
+
+const clearInputs = () => {
+	continentSelect.selectedIndex = 0
+	amountInput.value = ''
+	error.textContent = ''
+	countryBox.innerHTML = ''
+	countryResults.style.display = 'none'
+}
+
 const showModal = () => {
 	if (!(modalShadow.style.display === 'block')) {
 		modalShadow.style.display = 'block'
@@ -100,51 +130,20 @@ const showModal = () => {
 
 function selectValue() {
 	usersValue = document.getElementById('amount').value
-	console.log(usersValue)
-}
-
-const clearInputs = () => {
-	continentSelect.selectedIndex = 0
-	amountInput.value = ''
-	error.textContent = ''
-	countryBox.innerHTML = ''
-	countryResults.style.display = 'none'
 }
 
 continentSelect.addEventListener('change', async e => {
-	const continentCode = e.target.value
-	const countries = await getContinentCountries(continentCode)
-	countryResults.style.display = 'block'
-	countryBox.innerHTML = ''
-	countries.forEach(country => {
-		// const element = document.createElement('div')
-		// element.innerText = country.name
-		// countryBox.append(element)
-		countryCard = document.createElement('div')
-		countryCard.classList.add('country__card')
-		countryCard.setAttribute('id', ID)
-		countryCard.innerHTML = `
-        <img class="country__card-flag" src="https://flagcdn.com/${country.code.toLowerCase()}.svg" loading="lazy" alt="flag of a ${
-			country.name
-		}">
-
-        <div class="country__card-info">
-            <h3 class="country__card-name">${country.name}</h3>
-            <p class="country__card-details" onclick='showModal()'><i class="fa-solid fa-circle-info"></i></p>
-        </div>`
-		countryBox.append(countryCard)
-
-		ID++
-	})
+	continentCode = e.target.value
+	countries = await getContinentCountries(continentCode)
 })
 
 closeModalBtn.addEventListener('click', showModal)
+window.addEventListener('click', e => (e.target === modalShadow ? showModal() : false))
 submitBtn.addEventListener('click', checkForm)
 clearAllBtn.addEventListener('click', clearInputs)
 
 // TO DO
 // MODAL - displaying info of each country (each has its own unique id)
 // NUMBER OF DIVS - displaying the number of countries according to the number entered by the user
-// LINKING - connecting to the function with validation, when selecting a select and entering a number, only then the proper function will be called
 // ADD LOADING INFO
 // update readme with instructions
