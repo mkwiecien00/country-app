@@ -91,6 +91,7 @@ function getContinentCountries(continentCode) {
 
 function createResults() {
 	countryResults.style.display = 'block'
+	countryResults.classList.add('results-animation')
 	countryBox.innerHTML = ''
 	countries.forEach(country => {
 		countryCard = document.createElement('div')
@@ -116,6 +117,7 @@ const clearInputs = () => {
 	error.textContent = ''
 	countryBox.innerHTML = ''
 	countryResults.style.display = 'none'
+	countryResults.classList.remove('results-animation')
 }
 
 const showModal = () => {
