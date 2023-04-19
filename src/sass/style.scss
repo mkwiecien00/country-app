@@ -155,7 +155,7 @@ body {
 	&__box {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-		grid-template-rows: auto;
+		grid-auto-rows: 1fr;
 		padding: 1.5em;
 		width: 100%;
 		gap: 3em;
@@ -179,24 +179,28 @@ body {
 		&-flag {
 			width: 100%;
 			min-height: 80px;
-			object-fit: fill;
+			object-fit: contain;
+			box-shadow: 0 0 1em $gray;
 		}
 
 		&-info {
+			display: flex;
+			flex-grow: 1;
 			padding: 0.5em;
 			color: $black;
 		}
 
 		&-name {
-			padding: 1em 0.5em;
+			align-self: end;
+			padding: 1em 0.5em 0.5em;
 		}
 
 		&-details {
 			position: absolute;
 			padding: 0.25em;
 			font-size: 1.5rem;
-			top: 0.5em;
-			right: 0.5em;
+			bottom: 0.4em;
+			right: 0.4em;
 			cursor: pointer;
 		}
 	}

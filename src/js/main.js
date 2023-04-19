@@ -26,6 +26,9 @@ let usersValue
 let countryCard
 let continentCode
 let countries
+let divsArr = []
+let randomIndex
+let randomCountry
 
 const URL = 'https://countries.trevorblades.com/graphql'
 
@@ -110,8 +113,21 @@ const createResults = () => {
 		countryBox.append(countryCard)
 
 		ID++
+
+		divsArr.push(countryCard)
+		divsArr.forEach(country => (country.style.display = 'none'))
 	})
+	showRandomCountries()
 	setTimeout(removeResultsAnimation, 1000)
+}
+
+const showRandomCountries = () => {
+	for (let i = 0; i < amount; i++) {
+		randomIndex = Math.floor(Math.random() * divsArr.length)
+		randomCountry = divsArr[randomIndex]
+		divsArr.splice(randomIndex, 1)
+		randomCountry.style.display = 'flex'
+	}
 }
 
 const removeResultsAnimation = () => {
@@ -134,11 +150,7 @@ const clearInputs = () => {
 	error.textContent = ''
 	countryBox.innerHTML = ''
 	countryResults.style.display = 'none'
-}
-
-const selectValue = () => {
-	usersValue = document.getElementById('amount').value
-	console.log(parseInt(usersValue))
+	divsArr = []
 }
 
 continentSelect.addEventListener('change', async e => {
@@ -151,15 +163,5 @@ window.addEventListener('click', e => (e.target === modalShadow ? showModal() : 
 submitBtn.addEventListener('click', checkForm)
 clearAllBtn.addEventListener('click', clearInputs)
 
-
-
 // TO DO
 // MODAL - displaying info of each country (each has its own unique id)
-// NUMBER OF DIVS - displaying the number of countries according to the number entered by the user
-// ADD LOADING INFO
-// update readme with instructions
-
-// każdego diva pushuj do tablicy i z tablicy można wziąć randomizowac display konkretnej liczby randomowych państw
-// jak się showuje modal to przekaż id, żeby pobierało konkretnego carda i tam pozamieniać te spany + nowe api w modalu showmodal pobrac id?
-
-// dla kazdego dodac display block a dla randomowych dac display block -> kazdego diva wypushowac do tablicy
