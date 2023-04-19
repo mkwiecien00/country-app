@@ -30,6 +30,7 @@ let divsArr = []
 let randomIndex
 let randomCountry
 let chosenCountry
+let alphabeticalArr = []
 let code
 
 const URL = 'https://countries.trevorblades.com/graphql'
@@ -120,7 +121,6 @@ const createResults = () => {
 		divsArr.push(countryCard)
 		divsArr.forEach(country => (country.style.display = 'none'))
 	})
-
 	showRandomCountries()
 	setTimeout(removeResultsAnimation, 1000)
 }
@@ -134,8 +134,12 @@ const showRandomCountries = () => {
 		randomIndex = Math.floor(Math.random() * divsArr.length)
 		randomCountry = divsArr[randomIndex]
 		divsArr.splice(randomIndex, 1)
-		randomCountry.style.display = 'flex'
+		alphabeticalArr.push(randomCountry)
 	}
+	alphabeticalArr.sort((a, b) => a.id - b.id)
+	alphabeticalArr.forEach(country => {
+		country.style.display = 'flex'
+	})
 }
 
 const removeResultsAnimation = () => {
