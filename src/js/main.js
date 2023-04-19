@@ -1,4 +1,4 @@
-const continentSelect = document.getElementById('continent')
+const continentSelect = document.querySelector('#continent')
 const amountInput = document.querySelector('#amount')
 
 const error = document.querySelector('.error-text')
@@ -7,7 +7,7 @@ const clearAllBtn = document.querySelector('.clear')
 const submitBtn = document.querySelector('.submit')
 
 const countryResults = document.querySelector('.country__results')
-const countryBox = document.getElementById('country__box')
+const countryBox = document.querySelector('.country__box')
 
 const modalShadow = document.querySelector('.modal-shadow')
 const closeModalBtn = document.querySelector('.close')
@@ -19,18 +19,18 @@ const currency = document.querySelector('.currency')
 const subregion = document.querySelector('.subregion')
 const languages = document.querySelector('.languages')
 
-let ID = 0
-let countryCode
-let chosenCountry
 let amount
 let validAmount
-let usersValue
-let countryCard
 let continentCode
 let countries
+let countryCard
+let countryCode
+let ID = 0
 let divsArr = []
 let randomIndex
 let randomCountry
+let chosenCountry
+let code
 
 const URL = 'https://countries.trevorblades.com/graphql'
 
@@ -45,6 +45,7 @@ const checkForm = () => {
 			error.textContent = 'Please complete all fields correctly.'
 		}
 	} else {
+		clearInputs()
 		error.textContent = 'Please complete all fields correctly.'
 	}
 }
@@ -119,11 +120,16 @@ const createResults = () => {
 		divsArr.push(countryCard)
 		divsArr.forEach(country => (country.style.display = 'none'))
 	})
+
 	showRandomCountries()
 	setTimeout(removeResultsAnimation, 1000)
 }
 
 const showRandomCountries = () => {
+	if (continentCode === 'AN' && amount > 5) {
+		error.textContent = 'There are only 5 countries in Antarctica. Displaying 5 countries instead.'
+	}
+
 	for (let i = 0; i < amount; i++) {
 		randomIndex = Math.floor(Math.random() * divsArr.length)
 		randomCountry = divsArr[randomIndex]
@@ -151,7 +157,7 @@ const showModal = id => {
 }
 
 const displayMoreInfo = async chosenCountry => {
-	const code = chosenCountry.getAttribute('data-code')
+	code = chosenCountry.getAttribute('data-code')
 
 	const response = await fetch(`https://restcountries.com/v3.1/alpha/${code}`)
 	const data = await response.json()
@@ -159,7 +165,7 @@ const displayMoreInfo = async chosenCountry => {
 	countryName.textContent = data[0].name.common
 	capital.textContent = data[0].capital
 	population.textContent = data[0].population
-	currency.textContent = `${Object.values(data[0].currencies)[0].name} , ${Object.values(data[0].currencies)[0].symbol}`
+	currency.textContent = `${Object.values(data[0].currencies)[0].name}, ${Object.values(data[0].currencies)[0].symbol}`
 	subregion.textContent = data[0].subregion
 	languages.textContent = Object.values(data[0].languages).join(', ')
 }
@@ -174,20 +180,30 @@ const cleanInfo = () => {
 }
 
 const clearInputs = () => {
-	continentSelect.selectedIndex = 0
-	amountInput.value = ''
 	error.textContent = ''
 	countryBox.innerHTML = ''
 	countryResults.style.display = 'none'
 	divsArr = []
 }
 
+const clearAllInputs = () => {
+	continentSelect.selectedIndex = 0
+	amountInput.value = ''
+	clearInputs()
+}
+
+const enterCheck = e => {
+	if (e.key === 'Enter') {
+		checkForm()
+	}
+}
+
 continentSelect.addEventListener('change', async e => {
 	continentCode = e.target.value
 	countries = await getContinentCountries(continentCode)
 })
-
+amountInput.addEventListener('keyup', enterCheck)
 closeModalBtn.addEventListener('click', showModal)
 window.addEventListener('click', e => (e.target === modalShadow ? showModal() : false))
+clearAllBtn.addEventListener('click', clearAllInputs)
 submitBtn.addEventListener('click', checkForm)
-clearAllBtn.addEventListener('click', clearInputs)

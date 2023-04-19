@@ -174,7 +174,6 @@ body {
 		background-color: $white;
 		border-radius: 0.5em;
 		overflow: hidden;
-		cursor: pointer;
 
 		&-flag {
 			width: 100%;
@@ -192,16 +191,21 @@ body {
 
 		&-name {
 			align-self: end;
-			padding: 1em 0.5em 0.6em;
+			padding: 1em 1em 0.6em;
 		}
 
 		&-details {
 			position: absolute;
-			padding: 0.25em;
+			padding: 0.5em;
 			font-size: 1.5rem;
 			bottom: 0.1em;
 			right: 0.1em;
+			transition: color 0.3s;
 			cursor: pointer;
+		}
+
+		&-details:hover {
+			color: $blue-hover;
 		}
 	}
 }
@@ -264,8 +268,8 @@ body {
 		background-color: $blue;
 		border: none;
 		border-radius: 0.5em;
-		cursor: pointer;
 		transition: background-color 0.3s;
+		cursor: pointer;
 	}
 
 	.close:hover {
