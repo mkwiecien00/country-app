@@ -1,3 +1,13 @@
+## App usage
+
+Select the continent that interests you most. Then, give a number from 2 to 10, depending on the number of countries on the continent you want to display. Click on the submit button or, after entering the number of countries, click enter to display the random number of countries on the continent of your choice. If you want to learn more about any of the randomly generated countries, click on the question mark in the lower right corner of the country card. To close the information card, click the close button.
+The countries are listed in alphabetical order.
+Click clear all to return the application to its initial state.
+
+### Note
+
+There are only 5 countries in Antarctica, so if you enter a number above 5 in the input, it will still display 5 countries.
+
 ## Installing on local machine
 
 ### Please make sure you have node.js installed on your machine
