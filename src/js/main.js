@@ -19,6 +19,8 @@ const currency = document.querySelector('.currency')
 const subregion = document.querySelector('.subregion')
 const languages = document.querySelector('.languages')
 
+const loader = document.querySelector('.loader')
+
 let amount
 let validAmount
 let continentCode
@@ -163,6 +165,8 @@ const showModal = id => {
 const displayMoreInfo = async chosenCountry => {
 	code = chosenCountry.getAttribute('data-code')
 
+	loader.style.visibility = 'visible'
+
 	const response = await fetch(`https://restcountries.com/v3.1/alpha/${code}`)
 	const data = await response.json()
 
@@ -179,6 +183,8 @@ const displayMoreInfo = async chosenCountry => {
 	subregion.textContent = data[0].subregion ? data[0].subregion : 'No information found!'
 
 	languages.textContent = data[0].languages ? Object.values(data[0].languages).join(', ') : 'No information found!'
+
+	loader.style.visibility = 'hidden'
 }
 
 const cleanInfo = () => {
@@ -195,6 +201,7 @@ const clearInputs = () => {
 	countryBox.innerHTML = ''
 	countryResults.style.display = 'none'
 	divsArr = []
+	alphabeticalArr = []
 }
 
 const clearAllInputs = () => {
