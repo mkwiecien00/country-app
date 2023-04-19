@@ -12,14 +12,16 @@ const countryBox = document.getElementById('country__box')
 const modalShadow = document.querySelector('.modal-shadow')
 const closeModalBtn = document.querySelector('.close')
 
-const countryName = document.getElementsByClassName('name')
-const capital = document.getElementsByClassName('capital')
-const population = document.getElementsByClassName('population')
-const currency = document.getElementsByClassName('currency')
-const subregion = document.getElementsByClassName('subregion')
-const languages = document.getElementsByClassName('languages')
+const countryName = document.querySelector('.name')
+const capital = document.querySelector('.capital')
+const population = document.querySelector('.population')
+const currency = document.querySelector('.currency')
+const subregion = document.querySelector('.subregion')
+const languages = document.querySelector('.languages')
 
 let ID = 0
+let countryCode
+let chosenCountry
 let amount
 let validAmount
 let usersValue
@@ -101,14 +103,14 @@ const createResults = () => {
 	countries.forEach(country => {
 		countryCard = document.createElement('div')
 		countryCard.classList.add('country__card')
+		countryCode = country.code.toLowerCase()
+		countryCard.setAttribute('data-code', countryCode)
 		countryCard.setAttribute('id', ID)
 		countryCard.innerHTML = `
-        <img class="country__card-flag" src="https://flagcdn.com/${country.code.toLowerCase()}.svg" loading="lazy" alt="flag of a ${
-			country.name
-		}">
+        <img class="country__card-flag" src="https://flagcdn.com/${countryCode}.svg" loading="lazy" alt="flag of a ${country.name}">
         <div class="country__card-info">
             <h3 class="country__card-name">${country.name}</h3>
-            <p class="country__card-details" onclick='showModal()'><i class="fa-solid fa-circle-info"></i></p>
+            <p class="country__card-details" onclick='showModal(${ID})'><i class="fa-solid fa-circle-info"></i></p>
         </div>`
 		countryBox.append(countryCard)
 
@@ -134,14 +136,41 @@ const removeResultsAnimation = () => {
 	countryResults.classList.remove('results-animation')
 }
 
-const showModal = () => {
+const showModal = id => {
+	chosenCountry = document.getElementById(id)
+
 	if (!(modalShadow.style.display === 'block')) {
 		modalShadow.style.display = 'block'
+		cleanInfo()
+		displayMoreInfo(chosenCountry)
 	} else {
 		modalShadow.style.display = 'none'
 	}
 
 	modalShadow.classList.toggle('modal-animation')
+}
+
+const displayMoreInfo = async chosenCountry => {
+	const code = chosenCountry.getAttribute('data-code')
+
+	const response = await fetch(`https://restcountries.com/v3.1/alpha/${code}`)
+	const data = await response.json()
+
+	countryName.textContent = data[0].name.common
+	capital.textContent = data[0].capital
+	population.textContent = data[0].population
+	currency.textContent = `${Object.values(data[0].currencies)[0].name} , ${Object.values(data[0].currencies)[0].symbol}`
+	subregion.textContent = data[0].subregion
+	languages.textContent = Object.values(data[0].languages).join(', ')
+}
+
+const cleanInfo = () => {
+	countryName.textContent = ''
+	capital.textContent = ''
+	population.textContent = ''
+	currency.textContent = ''
+	subregion.textContent = ''
+	languages.textContent = ''
 }
 
 const clearInputs = () => {
@@ -162,6 +191,3 @@ closeModalBtn.addEventListener('click', showModal)
 window.addEventListener('click', e => (e.target === modalShadow ? showModal() : false))
 submitBtn.addEventListener('click', checkForm)
 clearAllBtn.addEventListener('click', clearInputs)
-
-// TO DO
-// MODAL - displaying info of each country (each has its own unique id)
