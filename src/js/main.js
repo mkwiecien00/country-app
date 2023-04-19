@@ -166,25 +166,31 @@ const displayMoreInfo = async chosenCountry => {
 	code = chosenCountry.getAttribute('data-code')
 
 	loader.style.visibility = 'visible'
+	loader.classList.add('loader-animation')
 
-	const response = await fetch(`https://restcountries.com/v3.1/alpha/${code}`)
-	const data = await response.json()
+	countryName.textContent = 'your country'
 
-	countryName.textContent = data[0].name.common || 'No information found!'
+	setTimeout(async () => {
+		const response = await fetch(`https://restcountries.com/v3.1/alpha/${code}`)
+		const data = await response.json()
 
-	capital.textContent = data[0].capital ? data[0].capital : 'No information found!'
+		countryName.textContent = data[0].name.common || 'No information found!'
 
-	population.textContent = data[0].population ? data[0].population : 'No information found!'
+		capital.textContent = data[0].capital ? data[0].capital : 'No information found!'
 
-	currency.textContent = data[0].currencies
-		? `${Object.values(data[0].currencies)[0].name}, ${Object.values(data[0].currencies)[0].symbol}`
-		: 'No information found!'
+		population.textContent = data[0].population ? data[0].population : 'No information found!'
 
-	subregion.textContent = data[0].subregion ? data[0].subregion : 'No information found!'
+		currency.textContent = data[0].currencies
+			? `${Object.values(data[0].currencies)[0].name}, ${Object.values(data[0].currencies)[0].symbol}`
+			: 'No information found!'
 
-	languages.textContent = data[0].languages ? Object.values(data[0].languages).join(', ') : 'No information found!'
+		subregion.textContent = data[0].subregion ? data[0].subregion : 'No information found!'
 
-	loader.style.visibility = 'hidden'
+		languages.textContent = data[0].languages ? Object.values(data[0].languages).join(', ') : 'No information found!'
+
+		loader.style.visibility = 'hidden'
+		loader.classList.remove('loader-animation')
+	}, 1000)
 }
 
 const cleanInfo = () => {

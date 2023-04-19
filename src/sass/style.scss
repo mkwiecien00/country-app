@@ -291,7 +291,7 @@ body {
 }
 
 .loader {
-    visibility: hidden;
+	visibility: hidden;
 	align-self: center;
 	margin-bottom: 0.5em;
 	width: 25px;
@@ -299,6 +299,9 @@ body {
 	border: 5px solid $white;
 	border-top: 5px solid $blue-hover;
 	border-radius: 50%;
+}
+
+.loader-animation {
 	animation: spin 2s linear infinite;
 }
 
