@@ -63,7 +63,9 @@ const queryFetch = (query, variables) => {
 			query: query,
 			variables: variables,
 		}),
-	}).then(res => res.json())
+	})
+		.then(res => res.json())
+		.catch(() => (error.textContent = 'Something went wrong. Please try again later!'))
 }
 
 queryFetch(`
@@ -73,14 +75,16 @@ queryFetch(`
         name
     }
 }
-`).then(data => {
-	data.data.continents.forEach(continent => {
-		const option = document.createElement('option')
-		option.value = continent.code
-		option.innerText = continent.name
-		continentSelect.append(option)
+`)
+	.then(data => {
+		data.data.continents.forEach(continent => {
+			const option = document.createElement('option')
+			option.value = continent.code
+			option.innerText = continent.name
+			continentSelect.append(option)
+		})
 	})
-})
+	.catch(() => (error.textContent = 'Something went wrong. Please try again later!'))
 
 const getContinentCountries = continentCode => {
 	return queryFetch(
@@ -95,9 +99,11 @@ const getContinentCountries = continentCode => {
     }
     `,
 		{ code: continentCode }
-	).then(data => {
-		return data.data.continent.countries
-	})
+	)
+		.then(data => {
+			return data.data.continent.countries
+		})
+		.catch(() => (error.textContent = 'Something went wrong. Please try again later!'))
 }
 
 const createResults = () => {
@@ -163,34 +169,38 @@ const showModal = id => {
 }
 
 const displayMoreInfo = async chosenCountry => {
-	code = chosenCountry.getAttribute('data-code')
+	try {
+		code = chosenCountry.getAttribute('data-code')
 
-	loader.style.visibility = 'visible'
-	loader.classList.add('loader-animation')
+		loader.style.visibility = 'visible'
+		loader.classList.add('loader-animation')
 
-	countryName.textContent = 'your country'
+		countryName.textContent = 'your country'
 
-	setTimeout(async () => {
-		const response = await fetch(`https://restcountries.com/v3.1/alpha/${code}`)
-		const data = await response.json()
+		setTimeout(async () => {
+			const response = await fetch(`https://restcountries.com/v3.1/alpha/${code}`)
+			const data = await response.json()
 
-		countryName.textContent = data[0].name.common || 'No information found!'
+			countryName.textContent = data[0].name.common || 'No information found!'
 
-		capital.textContent = data[0].capital ? data[0].capital : 'No information found!'
+			capital.textContent = data[0].capital ? data[0].capital : 'No information found!'
 
-		population.textContent = data[0].population ? data[0].population : 'No information found!'
+			population.textContent = data[0].population ? data[0].population : 'No information found!'
 
-		currency.textContent = data[0].currencies
-			? `${Object.values(data[0].currencies)[0].name}, ${Object.values(data[0].currencies)[0].symbol}`
-			: 'No information found!'
+			currency.textContent = data[0].currencies
+				? `${Object.values(data[0].currencies)[0].name}, ${Object.values(data[0].currencies)[0].symbol}`
+				: 'No information found!'
 
-		subregion.textContent = data[0].subregion ? data[0].subregion : 'No information found!'
+			subregion.textContent = data[0].subregion ? data[0].subregion : 'No information found!'
 
-		languages.textContent = data[0].languages ? Object.values(data[0].languages).join(', ') : 'No information found!'
+			languages.textContent = data[0].languages ? Object.values(data[0].languages).join(', ') : 'No information found!'
 
-		loader.style.visibility = 'hidden'
-		loader.classList.remove('loader-animation')
-	}, 1000)
+			loader.style.visibility = 'hidden'
+			loader.classList.remove('loader-animation')
+		}, 1000)
+	} catch {
+		error.textContent = 'Something went wrong. Please try again later!'
+	}
 }
 
 const cleanInfo = () => {
@@ -223,8 +233,12 @@ const enterCheck = e => {
 }
 
 continentSelect.addEventListener('change', async e => {
-	continentCode = e.target.value
-	countries = await getContinentCountries(continentCode)
+	try {
+		continentCode = e.target.value
+		countries = await getContinentCountries(continentCode)
+	} catch {
+		error.textContent = 'Something went wrong. Please try again later!'
+	}
 })
 amountInput.addEventListener('keyup', enterCheck)
 closeModalBtn.addEventListener('click', showModal)
