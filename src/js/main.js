@@ -21,6 +21,9 @@ const languages = document.querySelector('.languages')
 
 const loader = document.querySelector('.loader')
 
+const minValue = 2
+const maxValue = 10
+
 let amount
 let validAmount
 let continentCode
@@ -35,11 +38,15 @@ let chosenCountry
 let alphabeticalArr = []
 let code
 
-const URL = 'https://countries.trevorblades.com/graphql'
+const URL_GRAPHQL = 'https://countries.trevorblades.com/graphql'
+const API_LINK_FLAGS = 'https://flagcdn.com/'
+let URL_FLAGS
+const API_LINK_RESTCOUNTRIES = 'https://restcountries.com/v3.1/alpha/'
+let URL_RESTCOUNTRIES
 
 const checkForm = () => {
 	amount = parseInt(amountInput.value)
-	validAmount = amount >= 2 && amount <= 10
+	validAmount = amount >= minValue && amount <= maxValue
 	if (validAmount) {
 		if (continentSelect.value !== 'none') {
 			clearInputs()
@@ -53,57 +60,65 @@ const checkForm = () => {
 	}
 }
 
-const queryFetch = (query, variables) => {
-	return fetch(URL, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({
-			query: query,
-			variables: variables,
-		}),
-	})
-		.then(res => res.json())
-		.catch(() => (error.textContent = 'Something went wrong. Please try again later!'))
+const queryFetch = async (query, variables) => {
+	try {
+		const res = await fetch(URL_GRAPHQL, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				query: query,
+				variables: variables,
+			}),
+		})
+		const data = await res.json()
+		return data
+	} catch {
+		error.textContent = 'Something went wrong. Please try again later!'
+	}
 }
 
-queryFetch(`
-    query {
-    continents {
-        code
-        name
-    }
-}
-`)
-	.then(data => {
+const loadSelection = async () => {
+	try {
+		const data = await queryFetch(`
+        query {
+          continents {
+            code
+            name
+          }
+        }
+      `)
 		data.data.continents.forEach(continent => {
 			const option = document.createElement('option')
 			option.value = continent.code
 			option.innerText = continent.name
 			continentSelect.append(option)
 		})
-	})
-	.catch(() => (error.textContent = 'Something went wrong. Please try again later!'))
+	} catch {
+		error.textContent = 'Something went wrong. Please try again later!'
+	}
+}
 
-const getContinentCountries = continentCode => {
-	return queryFetch(
-		`
-    query getCountries($code: ID!) {
-        continent(code: $code) {
-            countries {
-                name
-                code
-            }
-        }
-    }
-    `,
-		{ code: continentCode }
-	)
-		.then(data => {
-			return data.data.continent.countries
-		})
-		.catch(() => (error.textContent = 'Something went wrong. Please try again later!'))
+const getContinentCountries = async continentCode => {
+	try {
+		const data = await queryFetch(
+			`
+			query getCountries($code: ID!) {
+				continent(code: $code) {
+					countries {
+						name
+						code
+					}
+				}
+			}
+			`,
+			{ code: continentCode }
+		)
+		return data.data.continent.countries
+	} catch {
+		error.textContent = 'Something went wrong. Please try again later!'
+	}
 }
 
 const createResults = () => {
@@ -116,8 +131,9 @@ const createResults = () => {
 		countryCode = country.code.toLowerCase()
 		countryCard.setAttribute('data-code', countryCode)
 		countryCard.setAttribute('id', ID)
+		URL_FLAGS = API_LINK_FLAGS + countryCode + '.svg'
 		countryCard.innerHTML = `
-        <img class="country__card-flag" src="https://flagcdn.com/${countryCode}.svg" loading="lazy" alt="flag of a ${country.name}">
+        <img class="country__card-flag" src="${URL_FLAGS}" loading="lazy" alt="flag of a ${country.name}">
         <div class="country__card-info">
             <h3 class="country__card-name">${country.name}</h3>
             <p class="country__card-details" onclick='showModal(${ID})'><i class="fa-solid fa-circle-info"></i></p>
@@ -171,6 +187,7 @@ const showModal = id => {
 const displayMoreInfo = async chosenCountry => {
 	try {
 		code = chosenCountry.getAttribute('data-code')
+		URL_RESTCOUNTRIES = API_LINK_RESTCOUNTRIES + code
 
 		loader.style.visibility = 'visible'
 		loader.classList.add('loader-animation')
@@ -178,7 +195,7 @@ const displayMoreInfo = async chosenCountry => {
 		countryName.textContent = 'your country'
 
 		setTimeout(async () => {
-			const response = await fetch(`https://restcountries.com/v3.1/alpha/${code}`)
+			const response = await fetch(URL_RESTCOUNTRIES)
 			const data = await response.json()
 
 			countryName.textContent = data[0].name.common || 'No information found!'
@@ -232,6 +249,9 @@ const enterCheck = e => {
 	}
 }
 
+window.addEventListener('DOMContentLoaded', () => {
+	loadSelection()
+})
 continentSelect.addEventListener('change', async e => {
 	try {
 		continentCode = e.target.value
