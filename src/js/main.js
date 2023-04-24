@@ -249,9 +249,7 @@ const enterCheck = e => {
 	}
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-	loadSelection()
-})
+document.addEventListener('DOMContentLoaded', loadSelection)
 continentSelect.addEventListener('change', async e => {
 	try {
 		continentCode = e.target.value
